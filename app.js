@@ -10,12 +10,15 @@ const fetchData = async (url) => {
 };
 
 const getWebsiteData = async (url) => {
-    const $ = await fetchData(url);
-    let content = $.text();
-    let regex = /title:".*?"/g;
-    let matches = content.match(regex);
-    let filteredStrings = matches.filter(str => str.includes('預購') && !str.includes('滿單'));
-    return filteredStrings;
+  const $ = await fetchData(url);
+  const nameDivs = $('div.name');
+  // console.log(nameDivs);
+  const names = nameDivs.map((index, element) => $(element).text()).get();
+  // console.log(names);
+  let filteredStrings = names.filter(
+    (str) => str.includes("預購") && !str.includes("滿單")
+  );
+  return filteredStrings;
 };
 
 app.get('/data', async (req, res) => {
